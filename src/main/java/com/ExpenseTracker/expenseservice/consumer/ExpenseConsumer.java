@@ -24,6 +24,7 @@ public class ExpenseConsumer {
           expenseService.createExpense(expenseDTO);
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println("Exception is thrown while consuming kafka event");
         }
     }
 
