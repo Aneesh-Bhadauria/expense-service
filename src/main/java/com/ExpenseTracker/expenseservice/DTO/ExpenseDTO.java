@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,4 +38,15 @@ public class ExpenseDTO {
 
     @JsonProperty(value = "created_at")
     private Timestamp createdAt;
+
+    @PrePersist
+    @PreUpdate
+    private void generateExternalId(){
+        if(this.externalId == null){
+            this.externalId = UUID.randomUUID().toString();
+        }
+        if(this.createdAt == null){
+            this.createdAt = new Timestamp(Instant.now().toEpochMilli());
+        }
+    }
 }
