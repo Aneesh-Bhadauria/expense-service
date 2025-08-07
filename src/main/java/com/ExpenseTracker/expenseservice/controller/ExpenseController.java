@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/expense/v1")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -21,8 +22,8 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    @GetMapping("/expense/v1/")
-    public ResponseEntity<List<ExpenseDTO>> getExpense(@PathParam("user_id") @NonNull String userId){
+    @GetMapping("/getExpense")
+    public ResponseEntity<List<ExpenseDTO>> getExpense(@RequestHeader(value = "X-User-Id") @NonNull String userId){
         try{
            List<ExpenseDTO> expenseList = expenseService.getExpense(userId);
            return new ResponseEntity<>(expenseList,HttpStatus.OK);
@@ -38,6 +39,11 @@ public class ExpenseController {
         }catch (Exception ex){
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<Boolean> checkHealth(){
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 }
